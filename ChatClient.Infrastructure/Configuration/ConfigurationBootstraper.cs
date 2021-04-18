@@ -1,5 +1,6 @@
 ﻿#region Namespaces 
 
+using ChatClient.Domain.SeedWork;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -12,15 +13,40 @@ namespace ChatClient.Infrastructure.Configuration
     /// </summary>
     public static class ConfigurationBootstraper
     {
+        #region Fields
+
+        private static AppConfig _appConfig;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the application configuration.
+        /// </summary>
+        /// <returns>Returns </returns>
+        public static AppConfig AppConfig
+        {
+            get
+            {
+                if (_appConfig == null)
+                {
+                    _appConfig = InitOptions<AppConfig>();
+                }
+
+                return _appConfig;
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
         /// Initializes the options.
         /// </summary>
         /// <typeparam name="T">Generic model</typeparam>
-        /// <returns>
-        /// Returns the generic model
-        /// </returns>
+        /// <returns>Returns the generic model</returns>
         public static T InitOptions<T>() where T : new()
         {
             var config = InitConfig();
@@ -30,9 +56,7 @@ namespace ChatClient.Infrastructure.Configuration
         /// <summary>
         /// Initializes the configuration.
         /// </summary>
-        /// <returns>
-        /// Returns the configuration root
-        /// </returns>
+        /// <returns>Returns the configuration root</returns>
         public static IConfigurationRoot InitConfig()
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -44,6 +68,6 @@ namespace ChatClient.Infrastructure.Configuration
             return builder.Build();
         }
 
-        #endregion
+        #endregion 
     }
 }

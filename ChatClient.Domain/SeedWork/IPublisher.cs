@@ -12,22 +12,9 @@ namespace ChatClient.Domain.SeedWork
     /// </summary>
     public interface IPublisher
     {
-        #region Events
-
-        /// <summary>
-        /// Occurs when [handler].
-        /// </summary>
-        event EventHandler<Message> Handler;
-
-        #endregion
-
         #region Methods
 
-        /// <summary>
-        /// Publishes the specified content.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        void Publish(string content);
+        void Publish(UserMessage message);
 
         #endregion
     }

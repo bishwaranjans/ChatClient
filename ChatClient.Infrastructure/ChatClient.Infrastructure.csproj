@@ -10,15 +10,11 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="NATS.Client" Version="0.12.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ChatClient.Domain\ChatClient.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Subscribe\" />
-    <Folder Include="Publish\" />
   </ItemGroup>
 
 </Project>

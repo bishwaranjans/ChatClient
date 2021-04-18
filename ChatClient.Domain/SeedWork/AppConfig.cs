@@ -13,7 +13,7 @@
         /// <value>
         /// The nats server.
         /// </value>
-        public string NATSServer { get; set; }
+        public string NATSServerUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the nats subject.
