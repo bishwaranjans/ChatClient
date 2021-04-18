@@ -5,6 +5,8 @@
     /// </summary>
     public class AppConfig
     {
+        #region Properties
+
         /// <summary>
         /// Gets or sets the nats server.
         /// </summary>
@@ -20,5 +22,7 @@
         /// The nats subject.
         /// </value>
         public string NATSSubject { get; set; }
+
+        #endregion
     }
 }

@@ -12,6 +12,8 @@ namespace ChatClient.Infrastructure.Configuration
     /// </summary>
     public static class ConfigurationBootstraper
     {
+        #region Methods
+
         /// <summary>
         /// Initializes the options.
         /// </summary>
@@ -41,5 +43,7 @@ namespace ChatClient.Infrastructure.Configuration
 
             return builder.Build();
         }
+
+        #endregion
     }
 }

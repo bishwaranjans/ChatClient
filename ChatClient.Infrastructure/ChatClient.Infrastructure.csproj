@@ -16,4 +16,9 @@
     <ProjectReference Include="..\ChatClient.Domain\ChatClient.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Subscribe\" />
+    <Folder Include="Publish\" />
+  </ItemGroup>
+
 </Project>
