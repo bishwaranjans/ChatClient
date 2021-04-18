@@ -7,7 +7,6 @@ using ChatClient.Infrastructure.Publish;
 using ChatClient.Infrastructure.Subscribe;
 using NATS.Client;
 using System;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,16 +52,23 @@ namespace ChatClient.Console
                         // Continous publish
                         PublishOnSubject();
                     }
-
-                    _connection.Close();
                 }
             }
             catch(Exception ex)
             {
                 System.Console.WriteLine($"Unhandled exception occurred: {ex.Message}");
             }
+            finally
+            {
+                // Close and dispose
+                _connection.Close();
+                _connection.Dispose();
+            }
         }
 
+        /// <summary>
+        /// Publishes the user input on NATS subject.
+        /// </summary>
         private static void PublishOnSubject()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -87,6 +93,9 @@ namespace ChatClient.Console
             }, cancellationToken);
         }
 
+        /// <summary>
+        /// Subscribes the NATS subject.
+        /// </summary>
         private static void SubscribeOnSubject()
         {
             Task.Run(() =>
