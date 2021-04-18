@@ -92,8 +92,7 @@ namespace ChatClient.Console
                         break;
                     }
                     else
-                    {
-                       
+                    {                       
                         _publisher.Publish(new UserMessage(ConfigurationBootstraper.CurrentUser, message));
                     }
                 }
