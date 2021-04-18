@@ -1,7 +1,6 @@
 ﻿#region Namespaces
 
 using ChatClient.Domain.Entity;
-using System;
 
 #endregion
 

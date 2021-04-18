@@ -1,10 +1,10 @@
 ﻿#region Namespaces
 
 using ChatClient.Domain.Entity;
+using ChatClient.Domain.SeedWork;
 using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
 using System;
-using System.Text;
 
 #endregion
 
@@ -13,7 +13,7 @@ namespace ChatClient.Infrastructure.Subscribe
     /// <summary>
     /// NATS Subscriber
     /// </summary>
-    public class Subscriber
+    public class Subscriber : ISubscriber
     {
         #region Fields
 
@@ -21,6 +21,11 @@ namespace ChatClient.Infrastructure.Subscribe
         /// The connection
         /// </summary>
         private static IEncodedConnection _connection;
+
+        /// <summary>
+        /// The subscription
+        /// </summary>
+        private static IAsyncSubscription _subscription;
 
         #endregion
 
@@ -51,7 +56,19 @@ namespace ChatClient.Infrastructure.Subscribe
                 Console.WriteLine($"TimeStamp:{userMessage.TimeStamp} - User:{userMessage.User.UserName} - Message: {userMessage.Content}");
             };
 
-            _connection.SubscribeAsync(ConfigurationBootstraper.AppConfig.NATSSubject, msgHandler);
+            _subscription = _connection.SubscribeAsync(ConfigurationBootstraper.AppConfig.NATSSubject, msgHandler);
+        }
+
+        /// <summary>
+        /// Unsubscribe subject.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public void UnSubscribe()
+        {
+            if (_connection.State == ConnState.CONNECTED)
+            {
+                _subscription.Unsubscribe();
+            }
         }
 
         #endregion

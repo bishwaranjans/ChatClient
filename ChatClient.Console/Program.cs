@@ -1,6 +1,7 @@
 ﻿#region Namespaces
 
 using ChatClient.Domain.Entity;
+using ChatClient.Domain.SeedWork;
 using ChatClient.Infrastructure.Configuration;
 using ChatClient.Infrastructure.Factories;
 using ChatClient.Infrastructure.Publish;
@@ -20,6 +21,9 @@ namespace ChatClient.Console
     class Program
     {
         private static IEncodedConnection _connection;
+        private static IPublisher _publisher;
+        private static ISubscriber _subscriber;
+
         private static bool isChattingContinue = true;
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace ChatClient.Console
 
                     System.Console.WriteLine("Continuous pub/sub chat");
                     System.Console.WriteLine("=======================");
-                    System.Console.WriteLine("Start chatting. Type 'stop' to stop.");
+                    System.Console.WriteLine("Start chatting. Enter 'stop' to stopping the ChatClient.");
 
                     while (isChattingContinue)
                     {
@@ -54,15 +58,18 @@ namespace ChatClient.Console
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.Console.WriteLine($"Unhandled exception occurred: {ex.Message}");
             }
             finally
             {
+                // Unsubscribe the client
+                _subscriber?.UnSubscribe();
+
                 // Close and dispose
-                _connection.Close();
-                _connection.Dispose();
+                _connection?.Close();
+                _connection?.Dispose();
             }
         }
 
@@ -85,8 +92,8 @@ namespace ChatClient.Console
                     }
                     else
                     {
-                        var publisher = new Publisher(_connection);
-                        publisher.Publish(new UserMessage(ConfigurationBootstraper.CurrentUser, message));
+                        _publisher = new Publisher(_connection);
+                        _publisher.Publish(new UserMessage(ConfigurationBootstraper.CurrentUser, message));
                     }
                 }
                 cancellationToken.ThrowIfCancellationRequested();
@@ -100,8 +107,8 @@ namespace ChatClient.Console
         {
             Task.Run(() =>
             {
-                var subscriber = new Subscriber(_connection);
-                subscriber.Subscribe();
+                _subscriber = new Subscriber(_connection);
+                _subscriber.Subscribe();
             });
         }
     }
