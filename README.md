@@ -22,3 +22,8 @@ Add a REST API (POST) which accepts a message string in the body of the request 
   - https://github.com/nats-io/nats.go
   - https://github.com/nats-io/nats.net
   - https://nats.io/download/nats-io/cnats
+
+### TODO:
+Invoke the REST API from client console
+- Get all received messages
+- post a new message
