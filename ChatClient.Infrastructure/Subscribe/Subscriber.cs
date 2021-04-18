@@ -4,6 +4,7 @@ using ChatClient.Domain.Entity;
 using ChatClient.Domain.SeedWork;
 using NATS.Client;
 using System;
+using System.Collections.Concurrent;
 
 #endregion
 
@@ -33,6 +34,12 @@ namespace ChatClient.Infrastructure.Subscribe
 
         #endregion
 
+        #region Properties
+
+        public ConcurrentBag<UserMessage> ReceivedUserMessages { get; set; }
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -44,6 +51,8 @@ namespace ChatClient.Infrastructure.Subscribe
         {
             _connection = connection;
             _subject = subject;
+
+            ReceivedUserMessages = new ConcurrentBag<UserMessage>();
         }
 
         #endregion
@@ -53,13 +62,17 @@ namespace ChatClient.Infrastructure.Subscribe
         /// <summary>
         /// Subscribes this instance.
         /// </summary>
-        public void Subscribe()
+        public void Subscribe(bool isPersistReceivedMessage = false)
         {
             EventHandler<EncodedMessageEventArgs> msgHandler = (sender, args) =>
             {
                 UserMessage userMessage = (UserMessage)args.ReceivedObject;
-
                 Console.WriteLine($"TimeStamp:{userMessage.TimeStamp} - User:{userMessage.User.UserName} - Message: {userMessage.Content}");
+
+                if (isPersistReceivedMessage)
+                {
+                    ReceivedUserMessages.Add(userMessage);
+                }
             };
 
             _subscription = _connection.SubscribeAsync(_subject, msgHandler);

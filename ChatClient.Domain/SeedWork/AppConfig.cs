@@ -23,6 +23,14 @@
         /// </value>
         public string NATSSubject { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is persist received message.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is persist received message; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPersistReceivedMessage { get; set; }
+
         #endregion
     }
 }

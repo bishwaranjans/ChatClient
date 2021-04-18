@@ -107,7 +107,7 @@ namespace ChatClient.Console
         {
             Task.Run(() =>
             {               
-                _subscriber.Subscribe();
+                _subscriber.Subscribe(ConfigurationBootstraper.AppConfig.IsPersistReceivedMessage);
             });
         }
     }
