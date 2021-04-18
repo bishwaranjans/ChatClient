@@ -4,8 +4,7 @@ using ChatClient.Domain.Entity;
 using ChatClient.Domain.SeedWork;
 using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
-using System;
-using System.Diagnostics;
+using System.Text;
 
 #endregion
 
@@ -17,37 +16,24 @@ namespace ChatClient.Infrastructure.Publish
     /// <seealso cref="ChatClient.Domain.SeedWork.IPublisher" />
     public class Publisher : IPublisher
     {
-        #region Properties
+        #region Fields
 
         /// <summary>
-        /// Gets the subject.
+        /// The connection
         /// </summary>
-        /// <value>
-        /// The subject.
-        /// </value>
-        public string Subject { get; private set; }
-
-        /// <summary>
-        /// Gets the options.
-        /// </summary>
-        /// <value>
-        /// The options.
-        /// </value>
-        public Options Options { get; private set; }
+        private static IConnection _connection;
 
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Publisher" /> class.
+        /// Initializes a new instance of the <see cref="Publisher"/> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">user</exception>
-        public Publisher()
+        /// <param name="connection">The connection.</param>
+        public Publisher(IConnection connection)
         {
-            Subject = ConfigurationBootstraper.AppConfig.NATSSubject;
-            Options = ConnectionFactory.GetDefaultOptions();
-            Options.Url = string.IsNullOrWhiteSpace(ConfigurationBootstraper.AppConfig.NATSServerUrl) ? Defaults.Url : ConfigurationBootstraper.AppConfig.NATSServerUrl;
+            _connection = connection;
         }
 
         #endregion
@@ -60,20 +46,9 @@ namespace ChatClient.Infrastructure.Publish
         /// <param name="userMessage">The user message.</param>
         public void Publish(UserMessage userMessage)
         {
-            Stopwatch sw = null;
-            using (IEncodedConnection connection = new ConnectionFactory().CreateEncodedConnection(Options))
-            {
-                connection.OnDeserialize = Serialization.JsonDeserializer;
-                connection.OnSerialize = Serialization.JsonSerializer;
+            byte[] data = Encoding.UTF8.GetBytes($"Timestamp:{userMessage.TimeStamp} - User:{userMessage.User.UserName} - Message: {userMessage.Content}");
 
-                sw = Stopwatch.StartNew();
-                connection.Publish(Subject, userMessage);
-                connection.Flush();
-
-                sw.Stop();
-
-                Console.WriteLine($"Published '{userMessage.Content}' in {sw.Elapsed.TotalSeconds} seconds.");
-            }
+            _connection.Publish(ConfigurationBootstraper.AppConfig.NATSSubject, data);
         }
 
         #endregion

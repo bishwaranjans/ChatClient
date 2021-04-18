@@ -1,12 +1,9 @@
 ﻿#region Namespaces
 
-using ChatClient.Domain.Entity;
-using ChatClient.Domain.SeedWork;
 using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
 using System;
-using System.Diagnostics;
-using System.Threading;
+using System.Text;
 
 #endregion
 
@@ -17,23 +14,12 @@ namespace ChatClient.Infrastructure.Subscribe
     /// </summary>
     public class Subscriber
     {
-        #region Properties
+        #region Fields
 
         /// <summary>
-        /// Gets the subject.
+        /// The connection
         /// </summary>
-        /// <value>
-        /// The subject.
-        /// </value>
-        public string Subject { get; private set; }
-
-        /// <summary>
-        /// Gets the options.
-        /// </summary>
-        /// <value>
-        /// The options.
-        /// </value>
-        public Options Options { get; private set; }
+        private static IConnection _connection;
 
         #endregion
 
@@ -42,12 +28,10 @@ namespace ChatClient.Infrastructure.Subscribe
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscriber"/> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">user</exception>
-        public Subscriber()
+        /// <param name="connection">The connection.</param>
+        public Subscriber(IConnection connection)
         {
-            Subject = ConfigurationBootstraper.AppConfig.NATSSubject;
-            Options = ConnectionFactory.GetDefaultOptions();
-            Options.Url = string.IsNullOrWhiteSpace(ConfigurationBootstraper.AppConfig.NATSServerUrl) ? Defaults.Url : ConfigurationBootstraper.AppConfig.NATSServerUrl;
+            _connection = connection;
         }
 
         #endregion
@@ -59,42 +43,13 @@ namespace ChatClient.Infrastructure.Subscribe
         /// </summary>
         public void Subscribe()
         {
-            using (IEncodedConnection connection = new ConnectionFactory().CreateEncodedConnection(Options))
+            EventHandler<MsgHandlerEventArgs> msgHandler = (sender, args) =>
             {
-                connection.OnDeserialize = Serialization.JsonDeserializer;
-                connection.OnSerialize = Serialization.JsonSerializer;
-
-                TimeSpan elapsed;
-
-                elapsed = receiveAsyncSubscriber(connection);
-
-                Console.WriteLine($"Received msgs in {elapsed.TotalSeconds} seconds ");
-            }
-        }
-
-        /// <summary>
-        /// Receives the asynchronous subscriber.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        /// <returns></returns>
-        private TimeSpan receiveAsyncSubscriber(IEncodedConnection connection)
-        {
-            Stopwatch sw = new Stopwatch();
-
-            EventHandler<EncodedMessageEventArgs> msgHandler = (sender, args) =>
-            {
-                UserMessage userMessage = (UserMessage)args.ReceivedObject;
-                Console.WriteLine($"Received ArgumentMessage: {args.Message}. User: {userMessage.User} has sent message: {userMessage.Content} at timestamp: {userMessage.TimeStamp}.");
-
-                sw.Stop();              
+                var message = Encoding.Default.GetString(args.Message.Data);
+                Console.WriteLine($"{message}");
             };
 
-            using (IAsyncSubscription s = connection.SubscribeAsync(Subject, msgHandler))
-            {
-               
-            }
-
-            return sw.Elapsed;
+            _connection.SubscribeAsync(ConfigurationBootstraper.AppConfig.NATSSubject, msgHandler);
         }
 
         #endregion

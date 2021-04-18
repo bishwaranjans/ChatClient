@@ -1,5 +1,6 @@
 ﻿#region Namespaces 
 
+using ChatClient.Domain.Entity;
 using ChatClient.Domain.SeedWork;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -15,7 +16,15 @@ namespace ChatClient.Infrastructure.Configuration
     {
         #region Fields
 
+        /// <summary>
+        /// The application configuration
+        /// </summary>
         private static AppConfig _appConfig;
+
+        /// <summary>
+        /// The user
+        /// </summary>
+        private static User _currentUser;
 
         #endregion
 
@@ -38,9 +47,39 @@ namespace ChatClient.Infrastructure.Configuration
             }
         }
 
+        /// <summary>
+        /// Gets the current user.
+        /// </summary>
+        /// <value>
+        /// The current user.
+        /// </value>
+        public static User CurrentUser
+        {
+            get
+            {
+                if (_currentUser == null)
+                {
+                    _currentUser = new User(Environment.UserName);
+                }
+
+                return _currentUser;
+            }
+        }
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Initializes the user.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <returns></returns>
+        public static User InitUser(string userName)
+        {
+            _currentUser = new User(userName);
+            return _currentUser;
+        }
 
         /// <summary>
         /// Initializes the options.

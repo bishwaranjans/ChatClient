@@ -2,9 +2,14 @@
 
 using ChatClient.Domain.Entity;
 using ChatClient.Infrastructure.Configuration;
+using ChatClient.Infrastructure.Factories;
 using ChatClient.Infrastructure.Publish;
 using ChatClient.Infrastructure.Subscribe;
+using NATS.Client;
 using System;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -15,6 +20,9 @@ namespace ChatClient.Console
     /// </summary>
     class Program
     {
+        private static IConnection _connection;
+        private static bool isChattingContinue = true;
+
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
@@ -25,35 +33,67 @@ namespace ChatClient.Console
 
             // User Identity
             System.Console.WriteLine("Please enter your name:");
-            var userName = System.Console.ReadLine();
-            System.Console.WriteLine($"Hello {userName} to ChatClient!");
-            var user = new User(userName);
+            var user = System.Console.ReadLine();
+            System.Console.WriteLine($"Hello {user} to ChatClient!");
+            ConfigurationBootstraper.InitUser(user);
 
-            // Setting Publisher
-            var publisher = new Publisher();
-
-            // Setting Subscriber
-            var subscriber = new Subscriber();
-            subscriber.Subscribe();
-
-            // User Hrlp section
-            var natsServerUrl = string.IsNullOrWhiteSpace(ConfigurationBootstraper.AppConfig.NATSServerUrl) ? "nats://localhost:4222" : ConfigurationBootstraper.AppConfig.NATSServerUrl;
-            System.Console.WriteLine($"You are now publish and subscribe messages from NATS Server: {natsServerUrl} on Subject: {ConfigurationBootstraper.AppConfig.NATSSubject}");
-            System.Console.WriteLine($"Enter any text message to publish.{Environment.NewLine}To exit, enter: 'exit'");
-            
-            // Receive message and publish continuously until exit
-            while (true)
+            try
             {
-                var message = System.Console.ReadLine();
-
-                if (!string.IsNullOrWhiteSpace(message) && message.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                using (_connection = NatsConnectionFactory.ConnectToNats())
                 {
-                    Environment.Exit(-1);
-                }
+                    // Subscribe to the Subject
+                    SubscribeOnSubject();
 
-                UserMessage userMessage = new UserMessage(user, message);
-                publisher.Publish(userMessage);
+                    System.Console.WriteLine("Continuous pub/sub chat");
+                    System.Console.WriteLine("=======================");
+                    System.Console.WriteLine("Start chatting. Type 'stop' to stop.");
+
+                    while (isChattingContinue)
+                    {
+                        // Continous publish
+                        PublishOnSubject();
+                    }
+
+                    _connection.Close();
+                }
             }
+            catch(Exception ex)
+            {
+                System.Console.WriteLine($"Unhandled exception occurred: {ex.Message}");
+            }
+        }
+
+        private static void PublishOnSubject()
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+            var cancellationToken = cts.Token;
+            var task = Task.Run(() =>
+            {
+                while (isChattingContinue)
+                {
+                    string message = System.Console.ReadLine();
+                    if (message.Equals("stop", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isChattingContinue = false;
+                        cts.Cancel();
+                    }
+                    else
+                    {
+                        var publisher = new Publisher(_connection);
+                        publisher.Publish(new UserMessage(ConfigurationBootstraper.CurrentUser, message));
+                    }
+                }
+                cancellationToken.ThrowIfCancellationRequested();
+            }, cancellationToken);
+        }
+
+        private static void SubscribeOnSubject()
+        {
+            Task.Run(() =>
+            {
+                var subscriber = new Subscriber(_connection);
+                subscriber.Subscribe();
+            });
         }
     }
 }
