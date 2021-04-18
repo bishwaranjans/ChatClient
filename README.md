@@ -1,5 +1,5 @@
 # ChatClient
-## Programming assignment, messaging based chat client 
+## Messaging based chat client 
 
 The assignment is about writing a messaging-based chat client which interacts with other clients through the NATS messaging system (See links below). 
 
