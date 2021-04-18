@@ -21,7 +21,7 @@ namespace ChatClient.Infrastructure.Publish
         /// <summary>
         /// The connection
         /// </summary>
-        private static IConnection _connection;
+        private static IEncodedConnection _connection;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace ChatClient.Infrastructure.Publish
         /// Initializes a new instance of the <see cref="Publisher"/> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public Publisher(IConnection connection)
+        public Publisher(IEncodedConnection connection)
         {
             _connection = connection;
         }
@@ -46,9 +46,7 @@ namespace ChatClient.Infrastructure.Publish
         /// <param name="userMessage">The user message.</param>
         public void Publish(UserMessage userMessage)
         {
-            byte[] data = Encoding.UTF8.GetBytes($"Timestamp:{userMessage.TimeStamp} - User:{userMessage.User.UserName} - Message: {userMessage.Content}");
-
-            _connection.Publish(ConfigurationBootstraper.AppConfig.NATSSubject, data);
+            _connection.Publish(ConfigurationBootstraper.AppConfig.NATSSubject, userMessage);
         }
 
         #endregion

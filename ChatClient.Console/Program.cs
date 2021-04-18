@@ -20,7 +20,7 @@ namespace ChatClient.Console
     /// </summary>
     class Program
     {
-        private static IConnection _connection;
+        private static IEncodedConnection _connection;
         private static bool isChattingContinue = true;
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 
+using ChatClient.Domain.SeedWork;
 using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
 
@@ -18,14 +19,18 @@ namespace ChatClient.Infrastructure.Factories
         /// Connects to nats.
         /// </summary>
         /// <returns></returns>
-        public static IConnection ConnectToNats()
+        public static IEncodedConnection ConnectToNats()
         {
             ConnectionFactory factory = new ConnectionFactory();
 
             var options = ConnectionFactory.GetDefaultOptions();
             options.Url = string.IsNullOrWhiteSpace(ConfigurationBootstraper.AppConfig.NATSServerUrl) ? Defaults.Url : ConfigurationBootstraper.AppConfig.NATSServerUrl;
 
-            return factory.CreateConnection(options);
+            var connection= factory.CreateEncodedConnection(options);
+            connection.OnDeserialize = Serialization.JsonDeserializer;
+            connection.OnSerialize = Serialization.JsonSerializer;
+
+            return connection;
         }
 
         #endregion
