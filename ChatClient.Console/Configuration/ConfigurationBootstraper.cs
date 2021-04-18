@@ -7,7 +7,7 @@ using System;
 
 #endregion
 
-namespace ChatClient.Infrastructure.Configuration
+namespace ChatClient.Console.Configuration
 {
     /// <summary>
     /// Bootstraping the configuration settings

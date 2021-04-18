@@ -13,7 +13,11 @@ namespace ChatClient.Domain.SeedWork
     {
         #region Methods
 
-        void Publish(UserMessage message);
+        /// <summary>
+        /// Publishes the message on the NATS subject.
+        /// </summary>
+        /// <param name="userMessage">The user Message.</param>    
+        public void Publish(UserMessage userMessage);
 
         #endregion
     }

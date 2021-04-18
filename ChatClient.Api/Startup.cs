@@ -1,11 +1,17 @@
+using ChatClient.Domain.SeedWork;
+using ChatClient.Infrastructure.Factories;
+using ChatClient.Infrastructure.Publish;
+using ChatClient.Infrastructure.Subscribe;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NATS.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +36,10 @@ namespace ChatClient.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChatClient.Api", Version = "v1" });
-            });
+            });           
+
+            services.AddAuthentication(IISDefaults.AuthenticationScheme);
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +54,7 @@ namespace ChatClient.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

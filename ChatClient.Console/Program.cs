@@ -1,8 +1,8 @@
 ﻿#region Namespaces
 
+using ChatClient.Console.Configuration;
 using ChatClient.Domain.Entity;
 using ChatClient.Domain.SeedWork;
-using ChatClient.Infrastructure.Configuration;
 using ChatClient.Infrastructure.Factories;
 using ChatClient.Infrastructure.Publish;
 using ChatClient.Infrastructure.Subscribe;
@@ -42,8 +42,12 @@ namespace ChatClient.Console
 
             try
             {
-                using (_connection = NatsConnectionFactory.ConnectToNats())
+                using (_connection = NatsConnectionFactory.ConnectToNats(string.IsNullOrWhiteSpace(ConfigurationBootstraper.AppConfig.NATSServerUrl) ? Defaults.Url : ConfigurationBootstraper.AppConfig.NATSServerUrl))
                 {
+                    // Initializes publisher and subscriber
+                    _publisher = new Publisher(_connection, ConfigurationBootstraper.AppConfig.NATSSubject);
+                    _subscriber = new Subscriber(_connection, ConfigurationBootstraper.AppConfig.NATSSubject);
+
                     // Subscribe to the Subject
                     SubscribeOnSubject();
 
@@ -56,20 +60,16 @@ namespace ChatClient.Console
                         // Continous publish
                         PublishOnSubject();
                     }
+
+                    // Unsubscribe the client
+                    _subscriber?.UnSubscribe();
+
+                    System.Console.WriteLine("ChatClient stopped.");
                 }
             }
             catch (Exception ex)
             {
                 System.Console.WriteLine($"Unhandled exception occurred: {ex.Message}");
-            }
-            finally
-            {
-                // Unsubscribe the client
-                _subscriber?.UnSubscribe();
-
-                // Close and dispose
-                _connection?.Close();
-                _connection?.Dispose();
             }
         }
 
@@ -89,10 +89,11 @@ namespace ChatClient.Console
                     {
                         isChattingContinue = false;
                         cts.Cancel();
+                        break;
                     }
                     else
                     {
-                        _publisher = new Publisher(_connection);
+                       
                         _publisher.Publish(new UserMessage(ConfigurationBootstraper.CurrentUser, message));
                     }
                 }
@@ -106,8 +107,7 @@ namespace ChatClient.Console
         private static void SubscribeOnSubject()
         {
             Task.Run(() =>
-            {
-                _subscriber = new Subscriber(_connection);
+            {               
                 _subscriber.Subscribe();
             });
         }

@@ -8,4 +8,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ChatClient.Domain\ChatClient.Domain.csproj" />
+    <ProjectReference Include="..\ChatClient.Infrastructure\ChatClient.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -2,7 +2,6 @@
 
 using ChatClient.Domain.Entity;
 using ChatClient.Domain.SeedWork;
-using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
 using System;
 
@@ -20,24 +19,31 @@ namespace ChatClient.Infrastructure.Subscribe
         /// <summary>
         /// The connection
         /// </summary>
-        private static IEncodedConnection _connection;
+        private IEncodedConnection _connection;
 
         /// <summary>
         /// The subscription
         /// </summary>
-        private static IAsyncSubscription _subscription;
+        private string _subject;
+
+        /// <summary>
+        /// The subscription
+        /// </summary>
+        private IAsyncSubscription _subscription;
 
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Subscriber"/> class.
+        /// Initializes a new instance of the <see cref="Publisher" /> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public Subscriber(IEncodedConnection connection)
+        /// <param name="subject">The subject.</param>
+        public Subscriber(IEncodedConnection connection, string subject)
         {
             _connection = connection;
+            _subject = subject;
         }
 
         #endregion
@@ -56,7 +62,7 @@ namespace ChatClient.Infrastructure.Subscribe
                 Console.WriteLine($"TimeStamp:{userMessage.TimeStamp} - User:{userMessage.User.UserName} - Message: {userMessage.Content}");
             };
 
-            _subscription = _connection.SubscribeAsync(ConfigurationBootstraper.AppConfig.NATSSubject, msgHandler);
+            _subscription = _connection.SubscribeAsync(_subject, msgHandler);
         }
 
         /// <summary>

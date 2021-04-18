@@ -2,9 +2,7 @@
 
 using ChatClient.Domain.Entity;
 using ChatClient.Domain.SeedWork;
-using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
-using System.Text;
 
 #endregion
 
@@ -21,32 +19,39 @@ namespace ChatClient.Infrastructure.Publish
         /// <summary>
         /// The connection
         /// </summary>
-        private static IEncodedConnection _connection;
+        private IEncodedConnection _connection;
+
+        /// <summary>
+        /// The subscription
+        /// </summary>
+        private string _subject;
 
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Publisher"/> class.
+        /// Initializes a new instance of the <see cref="Publisher" /> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public Publisher(IEncodedConnection connection)
+        /// <param name="subject">The subject.</param>
+        public Publisher(IEncodedConnection connection, string subject)
         {
             _connection = connection;
+            _subject = subject;
         }
 
         #endregion
 
-        #region Methods 
+        #region Methods       
 
         /// <summary>
-        /// Publishes the specified user message.
+        /// Publishes the message on the NATS subject.
         /// </summary>
-        /// <param name="userMessage">The user message.</param>
+        /// <param name="userMessage">The user Message.</param>
         public void Publish(UserMessage userMessage)
         {
-            _connection.Publish(ConfigurationBootstraper.AppConfig.NATSSubject, userMessage);
+            _connection.Publish(_subject, userMessage);
         }
 
         #endregion
