@@ -1,8 +1,15 @@
-﻿namespace ChatClient.Domain.Entity
+﻿#region Namespaces
+
+using System.Runtime.Serialization;
+
+#endregion
+
+namespace ChatClient.Domain.Entity
 {
     /// <summary>
     /// User entity
     /// </summary>
+    [DataContract]
     public class User
     {
         #region Properties
@@ -13,6 +20,7 @@
         /// <value>
         /// The name of the user.
         /// </value>
+        [DataMember]
         public string UserName { get; private set; }
 
         #endregion

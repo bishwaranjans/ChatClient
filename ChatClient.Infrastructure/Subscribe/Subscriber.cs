@@ -1,6 +1,7 @@
 ﻿#region Namespaces
 
 using ChatClient.Domain.Entity;
+using ChatClient.Domain.SeedWork;
 using ChatClient.Infrastructure.Configuration;
 using NATS.Client;
 using System;
@@ -60,6 +61,9 @@ namespace ChatClient.Infrastructure.Subscribe
         {
             using (IEncodedConnection connection = new ConnectionFactory().CreateEncodedConnection(Options))
             {
+                connection.OnDeserialize = Serialization.JsonDeserializer;
+                connection.OnSerialize = Serialization.JsonSerializer;
+
                 TimeSpan elapsed;
 
                 elapsed = receiveAsyncSubscriber(connection);
@@ -76,27 +80,18 @@ namespace ChatClient.Infrastructure.Subscribe
         private TimeSpan receiveAsyncSubscriber(IEncodedConnection connection)
         {
             Stopwatch sw = new Stopwatch();
-            Object testLock = new Object();
 
             EventHandler<EncodedMessageEventArgs> msgHandler = (sender, args) =>
             {
                 UserMessage userMessage = (UserMessage)args.ReceivedObject;
                 Console.WriteLine($"Received ArgumentMessage: {args.Message}. User: {userMessage.User} has sent message: {userMessage.Content} at timestamp: {userMessage.TimeStamp}.");
 
-                sw.Stop();
-                lock (testLock)
-                {
-                    Monitor.Pulse(testLock);
-                }
+                sw.Stop();              
             };
 
             using (IAsyncSubscription s = connection.SubscribeAsync(Subject, msgHandler))
             {
-                // just wait until we are done.
-                lock (testLock)
-                {
-                    Monitor.Wait(testLock);
-                }
+               
             }
 
             return sw.Elapsed;

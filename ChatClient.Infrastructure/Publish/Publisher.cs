@@ -40,22 +40,14 @@ namespace ChatClient.Infrastructure.Publish
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Publisher"/> class.
+        /// Initializes a new instance of the <see cref="Publisher" /> class.
         /// </summary>
-        /// <param name="user">The user.</param>
         /// <exception cref="ArgumentNullException">user</exception>
-        public Publisher(User user)
+        public Publisher()
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
             Subject = ConfigurationBootstraper.AppConfig.NATSSubject;
             Options = ConnectionFactory.GetDefaultOptions();
             Options.Url = string.IsNullOrWhiteSpace(ConfigurationBootstraper.AppConfig.NATSServerUrl) ? Defaults.Url : ConfigurationBootstraper.AppConfig.NATSServerUrl;
-
-            Options.SetUserCredentials(user.UserName);
         }
 
         #endregion
@@ -71,6 +63,9 @@ namespace ChatClient.Infrastructure.Publish
             Stopwatch sw = null;
             using (IEncodedConnection connection = new ConnectionFactory().CreateEncodedConnection(Options))
             {
+                connection.OnDeserialize = Serialization.JsonDeserializer;
+                connection.OnSerialize = Serialization.JsonSerializer;
+
                 sw = Stopwatch.StartNew();
                 connection.Publish(Subject, userMessage);
                 connection.Flush();

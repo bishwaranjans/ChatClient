@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ChatClient.Domain.Entity
 {
     /// <summary>
     /// Message entity
     /// </summary>
+    [DataContract]
     public class UserMessage
     {
         #region Properties
@@ -15,6 +17,7 @@ namespace ChatClient.Domain.Entity
         /// <value>
         /// The content.
         /// </value>
+        [DataMember]
         public string Content { get; private set; }
 
         /// <summary>
@@ -23,6 +26,7 @@ namespace ChatClient.Domain.Entity
         /// <value>
         /// The time stamp.
         /// </value>
+        [DataMember]
         public DateTime TimeStamp { get; private set; }
 
         /// <summary>
@@ -31,6 +35,7 @@ namespace ChatClient.Domain.Entity
         /// <value>
         /// The user.
         /// </value>
+        [DataMember]
         public User User { get; private set; }
 
         #endregion

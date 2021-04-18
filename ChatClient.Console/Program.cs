@@ -30,7 +30,7 @@ namespace ChatClient.Console
             var user = new User(userName);
 
             // Setting Publisher
-            var publisher = new Publisher(user);
+            var publisher = new Publisher();
 
             // Setting Subscriber
             var subscriber = new Subscriber();
