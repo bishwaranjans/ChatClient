@@ -1,7 +1,7 @@
 # ChatClient
 ## Messaging based chat client 
 
-The assignment is about writing a messaging-based chat client which interacts with other clients through the NATS messaging system (See links below). 
+Developed a messaging-based chat client which interacts with other clients through the NATS messaging system (See links below). 
 
 ### Part 1 
 Write a simple chat client which accepts messages from a user and sends these to a NATS subject using the PUB/SUB pattern. The client should also receive messages that comes in on the subject and 
