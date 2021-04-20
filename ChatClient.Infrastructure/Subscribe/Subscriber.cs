@@ -62,17 +62,14 @@ namespace ChatClient.Infrastructure.Subscribe
         /// <summary>
         /// Subscribes this instance.
         /// </summary>
-        public void Subscribe(bool isPersistReceivedMessage = false)
+        public void Subscribe()
         {
             EventHandler<EncodedMessageEventArgs> msgHandler = (sender, args) =>
             {
                 UserMessage userMessage = (UserMessage)args.ReceivedObject;
                 Console.WriteLine($"TimeStamp:{userMessage.TimeStamp} - User:{userMessage.User.UserName} - Message: {userMessage.Content}");
 
-                if (isPersistReceivedMessage)
-                {
-                    ReceivedUserMessages.Add(userMessage);
-                }
+                ReceivedUserMessages.Add(userMessage);
             };
 
             _subscription = _connection.SubscribeAsync(_subject, msgHandler);

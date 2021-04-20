@@ -29,7 +29,7 @@ namespace ChatClient.Domain.SeedWork
         /// <summary>
         /// Subscribes this instance.
         /// </summary>
-        void Subscribe(bool isPersistReceivedMessage = false);
+        void Subscribe();
 
         /// <summary>
         /// Uns the subscribe.

@@ -48,8 +48,6 @@ namespace ChatClient.Api.Controllers
             _logger = logger;
             _publisher = publisher;
             _subscriber = subscriber;
-
-            _subscriber.Subscribe(_configuration.GetValue<bool>("IsPersistReceivedMessage"));
         }
 
         #endregion

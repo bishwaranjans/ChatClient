@@ -94,8 +94,11 @@ namespace ChatClient.Api
             services.AddHttpContextAccessor();
 
             var connection = NatsConnectionFactory.ConnectToNats(NatsServerUrl);
-            services.AddSingleton<IPublisher>(new Publisher(connection, NatsSubject));
-            services.AddSingleton<ISubscriber>(new Subscriber(connection, NatsSubject));
+            var publisher = new Publisher(connection, NatsSubject);
+            var subscriber = new Subscriber(connection, NatsSubject);
+            subscriber.Subscribe();
+            services.AddSingleton<IPublisher>(publisher);
+            services.AddSingleton<ISubscriber>(subscriber);
         }
   
         /// <summary>
