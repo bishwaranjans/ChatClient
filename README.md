@@ -29,7 +29,7 @@ DDD approch has been used for designing the architecture of the solution by clea
  - **ChatClient.Console** : It is console based user interface of our solution signifying starting of the application and further processing for identifying a user and receiving as well as displaying messages based on the subscribed "Subject". This is the entry block of our program.
  - **ChatClient.Domain** : Responsible for representing concepts of the business, information about the business situation, and business rules. State that reflects the business situation is controlled and used here, even though the technical details of storing it are delegated to the infrastructure. This layer is the heart of our solution.
  - **ChatClient.Infrastructure** : Responsible for how the data that is initially held in domain entities (in memory). It contains all our publishing and subscribing logic.
- - **ChatClient.Api** : Responsible for providing HTTP and HTTP POST based messaging services.
+ - **ChatClient.Api** : Responsible for providing HTTP and HTTP POST based messaging services. Windows authetication has been enabled so that we can know which machine user is trying to run from the browser or POSTman.
 
 ![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Architecture.png)
  ## Design Patterns
