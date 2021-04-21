@@ -31,6 +31,7 @@ DDD approch has been used for designing the architecture of the solution by clea
  - **ChatClient.Infrastructure** : Responsible for how the data that is initially held in domain entities (in memory). It contains all our publishing and subscribing logic.
  - **ChatClient.Api** : Responsible for providing HTTP and HTTP POST based messaging services.
 
+![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Architecture.png)
  ## Design Patterns
  
 Facade and Factory design patterns has been incorporated to design the application. The primary focus was to use the Publish and Subscribe across end user applications i.e. Console and Api. Basic SOLID design patterns has been followed wherever possible. 
