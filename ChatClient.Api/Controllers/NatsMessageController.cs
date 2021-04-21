@@ -59,11 +59,11 @@ namespace ChatClient.Api.Controllers
         /// </summary>
         /// <returns>Returns list of received messages by the client.</returns>
         [HttpGet]
-        public IEnumerable<string> NatsMessage()
+        public IEnumerable<UserMessage> NatsMessage()
         {
             var userMessages = _subscriber.ReceivedUserMessages;
 
-            return userMessages.Select(s=>s.Content);
+            return userMessages;
         }
 
         /// <summary>

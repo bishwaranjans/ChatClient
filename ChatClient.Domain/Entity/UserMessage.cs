@@ -11,8 +11,6 @@ namespace ChatClient.Domain.Entity
     {
         #region Properties
 
-        public string UniqueMessageId { get; set; }
-
         /// <summary>
         /// Gets or sets the content.
         /// </summary>
@@ -51,7 +49,6 @@ namespace ChatClient.Domain.Entity
         /// <param name="content">The content.</param>
         public UserMessage(User user, string content)
         {
-            UniqueMessageId = Guid.NewGuid().ToString("N");
             User = user;
             Content = content;
             TimeStamp = DateTime.Now;
