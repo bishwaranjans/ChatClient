@@ -44,7 +44,7 @@ appsettings.json file is being used for customizing NATSServerUrl and NATSSubjec
 
 ### NATS Server Ready.
 
-To proceed to use the solution, make sure that NATS serevr is ready and running.
+To proceed to use the solution, make sure that NATS server is ready and running.
 ![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/NATSServerReady.PNG)
 
 ### Making solution ready in VS 2019
