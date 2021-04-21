@@ -63,6 +63,7 @@ As our solution is developed using .NET 5, we need VS 2019 to open it.
 ### Task 2: Demo
 - For Task 2, we need to use ChatClient.Api
 - Start the ChatClient.Api
+- We can use the Swagger feature to test out the HTTP GET
 - HTTP GET method can be used for getting all the client's received messages
 
 ![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Task2_GetAllMessages.PNG)
@@ -70,6 +71,7 @@ As our solution is developed using .NET 5, we need VS 2019 to open it.
 ### Task 3: Demo
 - For Task 3 also, we need to use ChatClient.Api
 - Start the ChatClient.Api if not started
+- We can use the Swagger feature to test out the HTTP POST
 - HTTP POST method can be used for posting a new string message
 
 ![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Task3_PostMessage.PNG)
