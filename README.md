@@ -24,7 +24,7 @@ Add a REST API (POST) which accepts a message string in the body of the request 
 
 ## Solution Architecture:
 
-DDD approch has been used for designing the architecture of the solution by clearly segregating the each responsibility with clear structure. Our client is segregated into two part i.e. Console and REST Api. The console part covers the Task 1 and REST API covers Task 2 and Task 3.
+DDD approch has been used for designing the architecture of the solution by clearly segregating the each responsibility with clear structure. Our client is segregated into two part i.e. Console and REST Api. The console part covers the Task 1 and REST API covers Task 2 and Task 3. .NET 5.0 and VS 2019 is required to run the solution.
 
  - **ChatClient.Console** : It is console based user interface of our solution signifying starting of the application and further processing for identifying a user and receiving as well as displaying messages based on the subscribed "Subject". This is the entry block of our program.
  - **ChatClient.Domain** : Responsible for representing concepts of the business, information about the business situation, and business rules. State that reflects the business situation is controlled and used here, even though the technical details of storing it are delegated to the infrastructure. This layer is the heart of our solution.
@@ -39,4 +39,41 @@ Facade and Factory design patterns has been incorporated to design the applicati
 ## Configuration
 
 appsettings.json file is being used for customizing NATSServerUrl and NATSSubject. Both Api and Console supports the customization.
+
+## Usage: How to use.
+
+### NATS Server Ready.
+
+To proceed to use the solution, make sure that NATS serevr is ready and running.
+![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/NATSServerReady.PNG)
+
+### Making solution ready in VS 2019
+
+As our solution is developed using .NET 5, we need VS 2019 to open it. 
+![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/SolutionInVS2019.PNG)
+
+### Task 1: Demo
+- For Task 1, we need to use ChatClient.Console.exe.
+- We can directly start it from VS 2019 or after building the solution in VS 2019, open the exe file and start running.
+- It will first ask the user to provide a name. After giving a name, the user can enter any text. To stop, user has to enter "stop" text. 
+- Once user type any text and click enters, it will publish that message to the NATS's subject. As the console is also subscribed to that BATSSubject, the subsribe message will be displayed with the user name and time stamp.
+
+![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Task1_Chat.PNG)
+
+### Task 2: Demo
+- For Task 2, we need to use ChatClient.Api
+- Start the ChatClient.Api
+- HTTP GET method can be used for getting all the client's received messages
+
+![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Task2_GetAllMessages.PNG)
+
+### Task 3: Demo
+- For Task 3 also, we need to use ChatClient.Api
+- Start the ChatClient.Api if not started
+- HTTP POST method can be used for posting a new string message
+
+![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Task3_PostMessage.PNG)
+
+
+
 
