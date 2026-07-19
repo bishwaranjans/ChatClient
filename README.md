@@ -53,7 +53,7 @@ As our solution is developed using .NET 5, we need VS 2019 to open it.
 ![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/SolutionInVS2019.PNG)
 
 ### Task 1: Demo
-- For Task 1, we need to use ChatClient.Console.exe.
+- For Task 1, we need to use ChatClient.Console.exe
 - We can directly start it from VS 2019 or after building the solution in VS 2019, open the exe file and start running.
 - It will first ask the user to provide a name. After giving a name, the user can enter any text. To stop, user has to enter "stop" text. 
 - Once user type any text and click enters, it will publish that message to the NATS's subject. As the console is also subscribed to that BATSSubject, the subsribe message will be displayed with the user name and time stamp.
