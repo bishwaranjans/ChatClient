@@ -12,7 +12,7 @@ Add a REST API (GET) where the client returns the messages that has been receive
 ### Task: Part 3 
 Add a REST API (POST) which accepts a message string in the body of the request and forwards it to the subject used in part 1. 
 
-### Links 
+### Links
 - NATS server executable 
   - https://nats.io/download/nats-io/gnatsd/
 - NATS documentation 
