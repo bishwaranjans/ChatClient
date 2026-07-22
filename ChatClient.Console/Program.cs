@@ -78,20 +78,20 @@ namespace ChatClient.Console
         /// </summary>
         private static void PublishOnSubject()
         {
-            CancellationTokenSource cts = new CancellationTokenSource();
+            using CancellationTokenSource cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
             var task = Task.Run(() =>
             {
                 while (isChattingContinue)
                 {
-                    string message = System.Console.ReadLine();
+                    string message = System.Console.ReadLine() ?? string.Empty;
                     if (message.Equals("stop", StringComparison.OrdinalIgnoreCase))
                     {
                         isChattingContinue = false;
                         cts.Cancel();
                         break;
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(message))
                     {                       
                         _publisher.Publish(new UserMessage(ConfigurationBootstraper.CurrentUser, message));
                     }
