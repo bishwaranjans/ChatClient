@@ -116,4 +116,3 @@ As our solution is developed using .NET 5, we need VS 2019 to open it.
 - HTTP POST method can be used for posting a new string message 
 
 ![alt text](https://github.com/bishwaranjans/ChatClient/blob/master/Documentation/Task3_PostMessage.PNG)
-
