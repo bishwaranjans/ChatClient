@@ -2,7 +2,7 @@
 The Messaging based chat client application has been designed inline with SOA and Domain Driven Design(DDD) to provide end user a console application as well as API endpoints to  interacts with other clients through the NATS messaging system (See links below). 
 
 ## Implementation Requirement:
-### Task: Part 1 
+### Task: Part 1
 Write a simple chat client which accepts messages from a user and sends these to a NATS subject using the PUB/SUB pattern. The client should also receive messages that comes in on the subject and 
 output these to the console. Each message should be tagged with the username of the client that sent them and a timestamp. 
 
