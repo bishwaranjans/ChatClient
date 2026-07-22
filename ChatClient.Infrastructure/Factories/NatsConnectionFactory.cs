@@ -25,10 +25,6 @@ namespace ChatClient.Infrastructure.Factories
             var options = ConnectionFactory.GetDefaultOptions();
             options.Url = natsUrl;
 
-            var connection = factory.CreateEncodedConnection(options);
-            connection.OnDeserialize = Serialization.JsonDeserializer;
-            connection.OnSerialize = Serialization.JsonSerializer;
-
             options.AsyncErrorEventHandler += (sender, args) =>
             {
                 System.Console.WriteLine("Error: ");
@@ -36,6 +32,10 @@ namespace ChatClient.Infrastructure.Factories
                 System.Console.WriteLine("   Message: " + args.Error);
                 System.Console.WriteLine("   Subject: " + args.Subscription.Subject);
             };
+
+            var connection = factory.CreateEncodedConnection(options);
+            connection.OnDeserialize = Serialization.JsonDeserializer;
+            connection.OnSerialize = Serialization.JsonSerializer;
 
             return connection;
         }
